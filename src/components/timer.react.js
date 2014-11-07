@@ -1,53 +1,50 @@
-// TODO: prop types
 /** @jsx React.DOM */
-var React = require('react'),
-	moment = require('moment'),
-	TimerBehavior = require('../mixins/timer')();
 
-function formattedTime(seconds){
-	return moment()
-		.startOf('day')
-		.seconds(seconds)
-		.format('H:mm:ss');
+var React = require('react'),
+	moment = require('moment');
+
+function diff(now, then){
+	return moment.utc(moment(now).diff(moment(then))).format("HH:mm:ss");
 }
 
 var Timer = React.createClass({
 
-	mixins: [TimerBehavior],
+	propTypes: {
+		start: React.PropTypes.instanceOf(Date).isRequired,
+		running: React.PropTypes.bool
+	},
 
 	getDefaultProps: function(){
-		return { start: 0, running: false };
+		return { running: false };
 	},
 
 	getInitialState: function(){
-		return { seconds: Number(this.props.start) };
+		return { date: this.props.start };
 	},
 
 	componentDidMount: function(){
-		this.setInterval(this.tick, 1000);
+		this.interval = setInterval(this.tick, 1000);
+	},
+
+	componentWillUnmount: function(){
+		clearInterval(this.interval);
 	},
 
 	componentWillReceiveProps: function(nextProps){
-		if(this.props.start !== nextProps.start){
-			this.setState({ seconds: Number(nextProps.start) });
-		}
-
 		if(nextProps.running){
-			this.setInterval(this.tick, 1000);
-		}else{
-			this.clearInterval();
+			this.setState({ date: nextProps.start });
 		}
 	},
 
 	tick: function(){
-		var newSeconds = this.state.seconds + Number(this.props.running);
-
-		this.setState({ seconds: newSeconds });
+		if(this.props.running){
+			this.setState({ date: new Date() });
+		}
 	},
 
 	render: function(){
 		return (
-			<time>{ formattedTime(this.state.seconds) }</time>
+			<time>{ diff(this.state.date, this.props.start) }</time>
 		);
 	}
 

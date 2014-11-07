@@ -5,31 +5,31 @@ var React = require('react'),
 
 var TimerForm = React.createClass({
 
+	propTypes: {
+		onStop: React.PropTypes.func
+	},
+
 	getDefaultProps: function(){
 		return { onStop: function(){} };
 	},
 
 	getInitialState: function(){
-		return { running: false };
+		return { running: false, start: new Date() };
 	},
 
 	startTimer: function(){
-		this.setState({ running: true, startTime: Date.now() });
+		this.setState({ running: true, start: new Date() });
 	},
 
 	stopTimer: function(){
-		this.setState({ running: false, stopTime: Date.now() }, function(){
-			this.props.onStop({
-				start: this.state.startTime,
-				stop: this.state.stopTime
-			});
-		});
+		this.setState({ running: false, stop: new Date() });
+		this.props.onStop(this.state);
 	},
 
 	render: function(){
 		return (
 			<div>
-				<Timer running={ this.state.running } />
+				<Timer start={ this.state.start } running={ this.state.running } />
 				<button onClick={ this.startTimer }>Start</button>
 				<button onClick={ this.stopTimer }>Stop</button>
 			</div>

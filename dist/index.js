@@ -21136,28 +21136,30 @@ var React = require('react'),
 
 var TimerForm = React.createClass({displayName: 'TimerForm',
 
-	getDefaultProps: function(){
+	/*getDefaultProps: function(){
 		return { onStop: function(){} };
+	},*/
+	propTypes: {
+		onStop: React.PropTypes.func
 	},
 
 	getInitialState: function(){
-		return { running: false };
+		return { running: false, start: new Date() };
 	},
 
 	startTimer: function(){
-		this.setState({ running: true, startTime: Date.now() });
+		this.setState({ running: true, start: new Date() });
 	},
 
 	stopTimer: function(){
-		this.setState({ running: false, stopTime: Date.now() }, function(){
-			this.props.onStop({ start: this.state.startTime, stop: this.state.stopTime });
-		});
+		this.setState({ running: false, stop: new Date() });
+		this.props.onStop(this.state);
 	},
 
 	render: function(){
 		return (
 			React.createElement("div", null, 
-				React.createElement(Timer, {running:  this.state.running}), 
+				React.createElement(Timer, {start:  this.state.start, running:  this.state.running}), 
 				React.createElement("button", {onClick:  this.startTimer}, "Start"), 
 				React.createElement("button", {onClick:  this.stopTimer}, "Stop")
 			)
@@ -21169,56 +21171,53 @@ var TimerForm = React.createClass({displayName: 'TimerForm',
 module.exports = TimerForm;
 
 },{"./timer.react":150,"react":148}],150:[function(require,module,exports){
-// TODO: prop types
 /** @jsx React.DOM */
-var React = require('react'),
-	moment = require('moment'),
-	TimerBehavior = require('../mixins/timer')();
 
-function formattedTime(seconds){
-	return moment()
-		.startOf('day')
-		.seconds(seconds)
-		.format('H:mm:ss');
+var React = require('react'),
+	moment = require('moment');
+
+function diff(now, then){
+	return moment.utc(moment(now).diff(moment(then))).format("HH:mm:ss");
 }
 
 var Timer = React.createClass({displayName: 'Timer',
 
-	mixins: [TimerBehavior],
+	propTypes: {
+		start: React.PropTypes.instanceOf(Date).isRequired,
+		running: React.PropTypes.bool
+	},
 
 	getDefaultProps: function(){
-		return { start: 0, running: false };
+		return { running: false };
 	},
 
 	getInitialState: function(){
-		return { seconds: Number(this.props.start) };
+		return { date: this.props.start };
 	},
 
 	componentDidMount: function(){
-		this.setInterval(this.tick, 1000);
+		this.interval = setInterval(this.tick, 1000);
+	},
+
+	componentWillUnmount: function(){
+		clearInterval(this.interval);
 	},
 
 	componentWillReceiveProps: function(nextProps){
-		if(this.props.start !== nextProps.start){
-			this.setState({ seconds: Number(nextProps.start) });
-		}
-
 		if(nextProps.running){
-			this.setInterval(this.tick, 1000);
-		}else{
-			this.clearInterval();
+			this.setState({ date: nextProps.start });
 		}
 	},
 
 	tick: function(){
-		var newSeconds = this.state.seconds + Number(this.props.running);
-
-		this.setState({ seconds: newSeconds });
+		if(this.props.running){
+			this.setState({ date: new Date() });
+		}
 	},
 
 	render: function(){
 		return (
-			React.createElement("time", null,  formattedTime(this.state.seconds) )
+			React.createElement("time", null,  diff(this.state.date, this.props.start) )
 		);
 	}
 
@@ -21226,7 +21225,7 @@ var Timer = React.createClass({displayName: 'Timer',
 
 module.exports = Timer;
 
-},{"../mixins/timer":152,"moment":2,"react":148}],151:[function(require,module,exports){
+},{"moment":2,"react":148}],151:[function(require,module,exports){
 var React = require('react'),
 	TimerForm = require('./components/timer-form.react');
 
@@ -21234,28 +21233,8 @@ function boo(){
 	console.log(arguments);
 }
 
-React.render(React.createElement(TimerForm, {onStop: boo}), document.querySelector('main'));
+React.render(React.createElement(TimerForm, {onStop1: boo}), document.querySelector('main'));
 
 window.React = React;
 
-},{"./components/timer-form.react":149,"react":148}],152:[function(require,module,exports){
-// should I have constructor?
-module.exports = function(){
-	return {
-		setInterval: function(fn, interval){
-			this.clearInterval();
-
-			this.interval = setInterval(fn, interval);
-		},
-		clearInterval: function(){
-			clearInterval(this.interval);
-
-			this.interval = null;
-		},
-		componentWillUnmount: function(){
-			this.clearInterval();
-		}
-	};
-};
-
-},{}]},{},[151])
+},{"./components/timer-form.react":149,"react":148}]},{},[151])
