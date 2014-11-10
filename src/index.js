@@ -1,10 +1,10 @@
 var React = require('react'),
-	TimerForm = require('./components/timer-form.react');
+	List = require('./components/list.react'),
+	EventItem = require('./components/event-item.react'),
+	EventsStore = require('./stores/events');
 
-function boo(){
-	console.log(arguments);
-}
+EventsStore.subscribe(function(events){
+	React.render(<List items={ events } wrapper={ EventItem } />, document.querySelector('main'));
+});
 
-React.render(<TimerForm onStop={boo}/>, document.querySelector('main'));
-
-window.React = React;
+window.events = EventsStore;
