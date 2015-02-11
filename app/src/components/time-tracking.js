@@ -10,11 +10,11 @@ var TimeTracking = React.createClass({
 	},
 
 	componentDidMount: function(){
-		store.on('update', this.updateTracking);
+		this.unsubscribe = store.listen(this.updateTracking);
 	},
 
 	componentWillUnmount: function(){
-		store.removeListener('update', this.updateTracking);
+		this.unsubscribe();
 	},
 
 	updateTracking: function(){
