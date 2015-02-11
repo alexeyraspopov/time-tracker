@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+	rimraf = require('gulp-rimraf'),
 	browserify = require('gulp-browserify');
 
 gulp.task('clean', function(){
