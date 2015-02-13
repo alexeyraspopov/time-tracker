@@ -23,9 +23,9 @@ module.exports = Reflux.createStore({
 		});
 	},
 
-	onRemove: function(id){
+	onRemove: function(item){
 		this.setState({
-			items: this.state.items.remove(id)
+			items: this.state.items.remove(item.id)
 		});
 	},
 

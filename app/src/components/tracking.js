@@ -22,11 +22,6 @@ var TimeTracking = React.createClass({
 		this.setState(this.getInitialState());
 	},
 
-	// TODO: replace it with async chain
-	startTracking: function(description){
-		actions.start(description || prompt('New Tracking'));
-	},
-
 	render: function() {
 		var items = this.state.items,
 			current = this.state.current;
@@ -36,7 +31,7 @@ var TimeTracking = React.createClass({
 				{
 					current
 						? <button onClick={ actions.stop }>Stop { current.description }</button>
-						: <button onClick={ this.startTracking.bind(this, null) }>Add</button>
+						: <button onClick={ actions.start.bind(null, null) }>Add</button>
 				}
 				<ul>
 					{ items.map(function(v){
@@ -45,7 +40,7 @@ var TimeTracking = React.createClass({
 								<TrackingItem tracking={ v }/>
 							</li>
 						);
-					}, this) }
+					}) }
 				</ul>
 			</div>
 		);

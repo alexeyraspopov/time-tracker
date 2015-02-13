@@ -10,7 +10,7 @@ var TrackingItem = React.createClass({
 			<div>
 				{ data.description }
 				<button onClick={ actions.start.bind(null, data.description) }>Start</button>
-				<button onClick={ actions.remove.bind(null, data.id) }>Remove</button>
+				<button onClick={ actions.remove.bind(null, data) }>Remove</button>
 			</div>
 		);
 	}
