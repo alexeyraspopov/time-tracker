@@ -27,6 +27,10 @@ var TimeTracking = React.createClass({
 		actions.add(description);
 	},
 
+	removeTracking: function(id){
+		actions.remove(id);
+	},
+
 	render: function() {
 		var items = this.state.items;
 
@@ -35,10 +39,13 @@ var TimeTracking = React.createClass({
 				<button onClick={ this.addTracking }>Add</button>
 				<ul>
 					{ items.map(function(v){
-						var removeTracking = function(){ actions.remove(v.id); };
-
-						return <li key={ v.id }>{ v.description }<button onClick={ removeTracking }>Remove</button></li>;
-					}) }
+						return (
+							<li key={ v.id }>
+								{ v.description }
+								<button onClick={ this.removeTracking.bind(this, v.id) }>Remove</button>
+							</li>
+						);
+					}, this) }
 				</ul>
 			</div>
 		);
