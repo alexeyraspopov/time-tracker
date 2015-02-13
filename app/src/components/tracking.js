@@ -1,12 +1,13 @@
 var React = require('react'),
 	Immutable = require('immutable'),
-	actions = require('../actions/time-tracking'),
-	store = require('../stores/time-tracking');
+	actions = require('../actions/tracking'),
+	store = require('../stores/tracking'),
+	TrackingItem = require('./tracking-item');
 
 var TimeTracking = React.createClass({
 
 	getInitialState: function(){
-		return { items: store.emit() };
+		return store.emit();
 	},
 
 	componentDidMount: function(){
@@ -21,28 +22,27 @@ var TimeTracking = React.createClass({
 		this.setState(this.getInitialState());
 	},
 
-	addTracking: function(){
-		var description = prompt('New Tracking');
-
-		actions.add(description);
-	},
-
-	removeTracking: function(id){
-		actions.remove(id);
+	// TODO: replace it with async chain
+	startTracking: function(description){
+		actions.start(description || prompt('New Tracking'));
 	},
 
 	render: function() {
-		var items = this.state.items;
+		var items = this.state.items,
+			current = this.state.current;
 
 		return (
 			<div>
-				<button onClick={ this.addTracking }>Add</button>
+				{
+					current
+						? <button onClick={ actions.stop }>Stop { current.description }</button>
+						: <button onClick={ this.startTracking.bind(this, null) }>Add</button>
+				}
 				<ul>
 					{ items.map(function(v){
 						return (
 							<li key={ v.id }>
-								{ v.description }
-								<button onClick={ this.removeTracking.bind(this, v.id) }>Remove</button>
+								<TrackingItem tracking={ v }/>
 							</li>
 						);
 					}, this) }
