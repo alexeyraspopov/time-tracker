@@ -1,27 +1,30 @@
 var Reflux = require('reflux'),
 	Immutable = require('immutable'),
+	stateful = require('reflux-stateful'),
 	actions = require('../actions/time-tracking'),
-	uuid = require('uuid');
-
-var seed = Immutable.OrderedMap({
-	'qwe': { start: '2000-10-20', description: 'feed a cat', duration: 3000 },
-	'asc': { start: '2000-10-20', description: 'rule the world', duration: 3000 },
-	'dfv': { start: '2000-10-20', description: 'playing with lego', duration: 3000 },
-	'erv': { start: '2000-10-20', description: 'coding', duration: 3000 },
-	'hgg': { start: '2000-10-20', description: 'sleeping', duration: 3000 }
-});
+	Tracking = require('../models/tracking');
 
 module.exports = Reflux.createStore({
 	listenables: actions,
+	mixins: [stateful],
 	onAdd: function(description){
-		seed = seed.set(uuid.v4(), { description: description });
-		this.trigger(seed);
+		var item = new Tracking(description);
+
+		this.setState(this.state.set(item.id, item));
 	},
 	onRemove: function(id){
-		seed = seed.remove(id);
-		this.trigger(seed);
+		this.setState(this.state.remove(id));
 	},
-	getTracking: function(){
-		return seed;
+	getDefaultData: function(){
+		return Immutable.OrderedMap({
+			'qwe': { id: 'qwe', start: '2000-10-20', description: 'feed a cat', duration: 3000 },
+			'asc': { id: 'asc', start: '2000-10-20', description: 'rule the world', duration: 3000 },
+			'dfv': { id: 'dfv', start: '2000-10-20', description: 'playing with lego', duration: 3000 },
+			'erv': { id: 'erv', start: '2000-10-20', description: 'coding', duration: 3000 },
+			'hgg': { id: 'hgg', start: '2000-10-20', description: 'sleeping', duration: 3000 }
+		});
+	},
+	emit: function(){
+		return this.state.toArray();
 	}
 });

@@ -6,7 +6,7 @@ var React = require('react'),
 var TimeTracking = React.createClass({
 
 	getInitialState: function(){
-		return { items: store.getTracking() };
+		return { items: store.emit() };
 	},
 
 	componentDidMount: function(){
@@ -34,11 +34,11 @@ var TimeTracking = React.createClass({
 			<div>
 				<button onClick={ this.addTracking }>Add</button>
 				<ul>
-					{ items.map(function(v, k){
-						var removeAction = function(){ actions.remove(k); };
+					{ items.map(function(v){
+						var removeTracking = function(){ actions.remove(v.id); };
 
-						return <li key={ k }>{ v.description }<button onClick={ removeAction }>Remove</button></li>;
-					}).toArray() }
+						return <li key={ v.id }>{ v.description }<button onClick={ removeTracking }>Remove</button></li>;
+					}) }
 				</ul>
 			</div>
 		);
