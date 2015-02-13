@@ -2,7 +2,8 @@ var React = require('react'),
 	Immutable = require('immutable'),
 	actions = require('../actions/tracking'),
 	store = require('../stores/tracking'),
-	TrackingItem = require('./tracking-item');
+	TrackingItem = require('./tracking-item'),
+	Current = require('./tracking-current');
 
 var TimeTracking = React.createClass({
 
@@ -28,11 +29,8 @@ var TimeTracking = React.createClass({
 
 		return (
 			<div>
-				{
-					current
-						? <button onClick={ actions.stop }>Stop { current.description }</button>
-						: <button onClick={ actions.start.bind(null, null) }>Add</button>
-				}
+				<Current data={ current } />
+
 				<ul>
 					{ items.map(function(v){
 						return (

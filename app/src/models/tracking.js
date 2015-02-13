@@ -1,10 +1,10 @@
 var uuid = require('uuid');
 
-function Tracking(description, start, duration){
+function Tracking(description, duration){
 	this.id = uuid.v4();
 	this.description = description;
-	this.start = start;
-	this.duration = duration;
+	this.start = new Date();
+	this.duration = duration || 0;
 }
 
 module.exports = Tracking;
