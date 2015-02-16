@@ -10,9 +10,12 @@ module.exports = Reflux.createStore({
 	mixins: [stateful],
 
 	onStart: function(description){
-		// TODO: check current
+		if(this.state.current){
+			this.onStop();
+		}
+
 		this.setState({
-			current: { description: description, start: new Date() }// new Tracking(description, new Date())
+			current: { description: description, start: new Date() }
 		});
 	},
 

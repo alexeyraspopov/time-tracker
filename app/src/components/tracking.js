@@ -32,7 +32,7 @@ var TimeTracking = React.createClass({
 				<Current data={ current } />
 
 				<ul>
-					{ items.map(function(v){
+					{ items.reverse().map(function(v){
 						return (
 							<li key={ v.id }>
 								<TrackingItem tracking={ v }/>
