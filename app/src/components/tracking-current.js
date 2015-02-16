@@ -35,9 +35,9 @@ var Current = React.createClass({
 		});
 	},
 
-	render: function() {
+	render: function(){
 		var data = this.props.data,
-			duration = this.state.duration;
+			duration = time.format('HH:mm:ss', this.state.duration);
 
 		return (
 			<div>
