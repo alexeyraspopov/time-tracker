@@ -8,7 +8,7 @@ var TrackingItem = React.createClass({
 
 		return (
 			<div>
-				{ data.description }
+				{ data.description } ({ data.duration })
 				<button onClick={ actions.start.bind(null, data.description) }>Start</button>
 				<button onClick={ actions.remove.bind(null, data) }>Remove</button>
 			</div>

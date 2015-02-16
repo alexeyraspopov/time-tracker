@@ -2,20 +2,24 @@ var Reflux = require('reflux'),
 	Immutable = require('immutable'),
 	stateful = require('reflux-stateful'),
 	actions = require('../actions/tracking'),
-	Tracking = require('../models/tracking');
+	Tracking = require('../models/tracking'),
+	time = require('../lib/time');
 
 module.exports = Reflux.createStore({
 	listenables: actions,
 	mixins: [stateful],
 
 	onStart: function(description){
+		// TODO: check current
 		this.setState({
-			current: new Tracking(description)
+			current: { description: description, start: new Date() }// new Tracking(description, new Date())
 		});
 	},
 
 	onStop: function(){
-		var item = this.state.current;
+		var current = this.state.current,
+			diff = time.diff(new Date(), current.start),
+			item = new Tracking(current.description, current.start, diff);
 
 		this.setState({
 			items: this.state.items.set(item.id, item),

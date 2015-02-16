@@ -1,9 +1,9 @@
 var uuid = require('uuid');
 
-function Tracking(description, duration){
+function Tracking(description, start, duration){
 	this.id = uuid.v4();
 	this.description = description;
-	this.start = new Date();
+	this.start = start || 0;
 	this.duration = duration || 0;
 }
 
