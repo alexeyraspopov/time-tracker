@@ -10,7 +10,10 @@ gulp.task('clean', function(){
 
 gulp.task('build', ['clean'], function(){
 	return gulp.src('./app/src/index.js')
-		.pipe(browserify({ transform: 'reactify' }))
+		.pipe(browserify({
+			transform: 'reactify',
+			paths: ['./node_modules', './app/src']
+		}))
 		.pipe(uglify())
 		.pipe(gulp.dest('./app/dist'));
 });
