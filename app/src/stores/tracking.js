@@ -1,9 +1,9 @@
 var Reflux = require('reflux'),
 	Immutable = require('immutable'),
 	stateful = require('reflux-stateful'),
-	actions = require('../actions/tracking'),
-	Tracking = require('../models/tracking'),
-	time = require('../lib/time');
+	actions = require('actions/tracking'),
+	Tracking = require('models/tracking'),
+	time = require('lib/time');
 
 module.exports = Reflux.createStore({
 	listenables: actions,

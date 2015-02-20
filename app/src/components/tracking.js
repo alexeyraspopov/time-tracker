@@ -1,9 +1,9 @@
 var React = require('react'),
 	Immutable = require('immutable'),
-	actions = require('../actions/tracking'),
-	store = require('../stores/tracking'),
-	TrackingItem = require('./tracking-item'),
-	Current = require('./tracking-current');
+	actions = require('actions/tracking'),
+	store = require('stores/tracking'),
+	TrackingItem = require('components/tracking-item'),
+	Current = require('components/tracking-current');
 
 var TimeTracking = React.createClass({
 

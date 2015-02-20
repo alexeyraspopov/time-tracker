@@ -1,6 +1,6 @@
 var React = require('react'),
-	actions = require('../actions/tracking'),
-	time = require('../lib/time');
+	actions = require('actions/tracking'),
+	time = require('lib/time');
 
 var Current = React.createClass({
 
